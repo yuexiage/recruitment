@@ -123,5 +123,14 @@ class RoleController extends Controller
         }
         return redirect('admin/role')->with('message', '操作成功!!');
     }
+    
+    /**
+     * 删除角色
+     */
+    
+    public function destroy($id,Request $request){
+        $input = $request->all();
+        
+    }
    
 }

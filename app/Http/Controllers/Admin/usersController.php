@@ -1,15 +1,23 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+use App\models\RoleModel;
 use App\models\usersModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-
+use Illuminate\Support\Facades\Mail;
 class usersController extends Controller
 {
     private $view_data = [];
     public function index(){
+        /* $name = 'vilin';
+        $flag = Mail::send('emails.index',['name'=>$name],function($message){
+            $to = '418221610@qq.com';
+            $message ->to($to)->subject('测试邮件');
+        });
+            var_export($flag);
+         */
         
         return view('admin/users/list');
     }
@@ -38,6 +46,20 @@ class usersController extends Controller
         }
     }
     
+    public function edit($user_id,Request $request){
+        if($user_id!=-1){
+            $user = usersModel::where('id',$user_id)->first();
+            if(empty($user)){
+                abort('404');
+            }
+            $view_data['user']  = $user->toArray();
+        }
+        //获取所有角色
+        $roles                  = RoleModel::all();
+        $view_data['roles']     = $roles;
+        return view('admin.users.edit',$view_data);
+    }
+    
     /**
      * 拼装操作按钮
      * @param $id
@@ -48,7 +70,7 @@ class usersController extends Controller
         return [
             '编辑' => [
                 'auth' => 'role/roleedit',
-                'href' => url("admin/role/$id/edit"),
+                'href' => url("admin/users/$id/edit"),
                 'btnStyle' => 'primary',
                 'icon' => 'fa fa-paste'
             ],

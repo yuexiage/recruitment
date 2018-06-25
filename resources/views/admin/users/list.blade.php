@@ -24,7 +24,7 @@
 			<div class="ibox-content">
 				<div class="form-group clearfix col-sm-1">
 					@if (session('user')['isadmin']==1)
-						<a href="{{url('/admin/role/-1/edit')}}">
+						<a href="{{url('/admin/users/-1/edit')}}">
 							<button class="btn btn-outline btn-primary" type="button">添加用户</button>
 						</a>
 					@endif

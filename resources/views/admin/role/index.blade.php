@@ -129,7 +129,25 @@ $(document).ready(function () {
 function roleDel(id){
     layer.confirm('确认删除此角色?', {icon: 3, title:'提示'}, function(index){
         //do something
-        $.getJSON("{:url('role/roleDel')}", {'id' : id}, function(res){
+    	$.ajax({
+	    	url:"{{url('/admin/role/')}}"+'/'+id,
+            type:'POST',
+            headers: {
+	            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+	        },  
+	        data:{'_method':'DELETE'},
+            success:function(res){
+               if(res.code==0){
+            	   layer.msg(res.msg); 
+            	   //window.location.reload() 
+               }else{
+            	   layer.alert(res.msg); 
+               }
+            }           
+        });
+
+
+        /* $.getJSON("{{url('/admin/role')}}", {'id' : id}, function(res){
             if(1 == res.code){
                 layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function(){
                     initTable();
@@ -139,7 +157,10 @@ function roleDel(id){
             }else{
                 layer.alert(res.msg, {title: '友情提示', icon: 2});
             }
-        });
+        }); */
+
+
+        
 
         layer.close(index);
     })

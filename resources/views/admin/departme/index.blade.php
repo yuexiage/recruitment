@@ -38,7 +38,7 @@ layui.use(['element','form'], function(){
 	var form = layui.form;
 	form.on('submit(formDemo)', function(data){
 		$.ajax({
-	    	url:"{{url('/admin/departme')}}",
+	    	url:"{{url('/admin/departme/')}}",
             type:'POST',
             headers: {
 	            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
