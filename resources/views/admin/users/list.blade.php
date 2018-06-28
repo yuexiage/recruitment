@@ -50,12 +50,12 @@
 					<div class="example fixed-table-container">
 						<table id="cusTable" class="table table-hover table-striped">
 							<thead>
-								<th data-field="id">用户ID</th>
+								<th data-field="id" width="50">用户ID</th>
 								<th data-field="name">用户名称</th>
 								<th data-field="email">用户邮箱</th>
 								<th data-field="backuser">后台用户</th>
 								<th data-field="isadmin">管理员</th>
-								<th data-field="checkout">迁出</th>
+								<th data-field="checkout" width="50">迁出</th>
 								<th data-field="created_at">创建时间</th>
 								<th data-field="operate">操作</th>
 							</thead>
