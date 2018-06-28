@@ -29,7 +29,6 @@
                 <div class="ibox-content">
                     <form class="form-horizontal m-t layui-form" id="commentForm" method="post" action="{{url('admin/users')}}">
 						{{ csrf_field() }}
-						@method('PUT')
                         <div class="form-group">
                             <label class="col-sm-3 control-label"><sub>*</sub>用户名：</label>
                             <div class="input-group col-sm-4">

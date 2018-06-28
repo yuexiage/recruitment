@@ -126,13 +126,17 @@ class usersController extends Controller
         }
     }
     
-    public function destroy($id){
-        try {echo $id;
+    public function delete($id){
+        try {
             if(empty($id)){
                 throw new \Exception('信息错误!',1);
             }
-            User::where('id',$id)->count();
-            
+            $count = User::where('id',$id)->count();
+            if(!$count){
+                throw new \Exception('无效用户ID!',1);
+            }
+            User::where('id',$id)->delete();
+            return response()->json(['code' => 0,'data' => '','msg'  =>'删除成功!']);
         } catch (\Exception $e) {
             return response()->json(['code' => $e->getCode(),'data' => '','msg'  =>$e->getMessage()]);
         }

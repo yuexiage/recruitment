@@ -28,6 +28,7 @@ Route::group(['namespace' => 'Admin', 'middleware' => 'admin'], function () {
     
     //用户管理
     Route::get('/admin/users/getUsers', 'usersController@getUsers');
+    Route::get('/admin/users/delete/{id}', 'usersController@delete');
     Route::resource('/admin/users', 'usersController');
     
     //登录

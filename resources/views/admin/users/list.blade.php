@@ -132,25 +132,15 @@ $(document).ready(function () {
 function roleDel(id){
     layer.confirm('确认删除此角色?', {icon: 3, title:'提示'}, function(index){
         //do something
-    	$.ajax({
-	    	url:"{{url('/admin/users/')}}",
-            type:'POST',
-            headers: {
-	            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-	        },  
-	        data:{'id' : id},
-            success:function(res){
-               if(res.code==0){
-            	   layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function(){
-                       initTable();
-                   });
-            	   
-               }else{
-            	   layer.alert(res.msg, {title: '友情提示', icon: 2});
-               }
-            }           
+        $.getJSON("{{url('/admin/users/delete')}}"+'/'+id, {}, function(res){
+            if(1 == res.code){
+                layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function(){
+                	window.location.reload();
+                });
+            }else{
+                layer.alert(res.msg, {title: '友情提示', icon: 2});
+            }
         });
-
 
         layer.close(index);
     })
