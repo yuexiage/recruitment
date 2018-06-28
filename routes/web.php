@@ -30,17 +30,14 @@ Route::group(['namespace' => 'Admin', 'middleware' => 'admin'], function () {
     Route::get('/admin/users/getUsers', 'usersController@getUsers');
     Route::resource('/admin/users', 'usersController');
     
-    
     //登录
     Route::post('/admin/dologin', 'LoginController@doLogin');
     Route::get('/admin/logout', 'LoginController@logout');
-    
     Route::get('/admin/indexpage', 'AdminController@indexPage');
     
     //部门
     Route::get('/admin/departme/getdepartme', 'DepartmeController@getDepartme');
     Route::resource('/admin/departme', 'DepartmeController');
-    
     
     //配置
     Route::resource('/admin/config', 'ConfigController');

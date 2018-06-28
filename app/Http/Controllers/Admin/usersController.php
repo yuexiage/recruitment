@@ -1,9 +1,12 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+use Validator;
+use App\User;
 use App\models\RoleModel;
 use App\models\usersModel;
 use Illuminate\Http\Request;
+use App\models\DepartmeModel;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
@@ -46,18 +49,93 @@ class usersController extends Controller
         }
     }
     
+    /**
+     * 修改信息
+     * @param string $user_id
+     * @param Request $request
+     * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
+     */
     public function edit($user_id,Request $request){
         if($user_id!=-1){
             $user = usersModel::where('id',$user_id)->first();
             if(empty($user)){
                 abort('404');
             }
-            $view_data['user']  = $user->toArray();
+            $view_data['user']      = $user;
         }
         //获取所有角色
-        $roles                  = RoleModel::all();
-        $view_data['roles']     = $roles;
+        $departmes                  = DepartmeModel::all();
+        $view_data['departmes']     = $departmes;
         return view('admin.users.edit',$view_data);
+    }
+
+    /**
+     * 保存用户信息
+     * @param Request $request
+     * @throws \Exception
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function store(Request $request){
+        try {
+            $rules = [
+                'name'      => 'required|alpha_num',
+                'email'     => 'required|email',
+                'departme'  => 'required',
+                'user_id'   => 'required'
+            ];
+            if($request->password!=''){
+                $rules['password']                  = 'confirmed';
+                $rules['password_confirmation']     = 'required';
+            }
+            $messages = [
+                'name.required'     => '姓名不能为空!',
+                'email.required'    => '邮箱不能为空!',
+                'email.email'       => '邮箱格式错误!',
+                'departme.required' => '请选择部门!',
+                'user_id.required'  => '用户信息为空!',
+            ];
+            $validator = Validator::make($request->all(), $rules,$messages);
+            if ($validator->fails()) {
+                throw new \Exception($validator->errors(),1);
+            }
+            //判断用户邮箱和用户名是否存在
+            if($request->user_id==-1){
+                $hasUser            = User::whereRaw('email = ? or name = ?',[$request['email'],$request['name']])->count();
+                if($hasUser){
+                    throw new \Exception('用户信息已存在',1);
+                }
+            }
+
+            //保存用户信息
+            $data                   = [];
+            $data['name']           = $request['name'];
+            $data['email']          = $request['email'];
+            if($request->password!=''){
+                $data['password']   =  bcrypt($request['password']);
+            }
+            $data['backuser']       = 1;
+            $data['departme_alias'] = $request['departme'];
+            if($request->user_id==-1){
+                User::create($data);
+            }else{
+                User::where('id',$request['user_id'])->update($data);
+            }
+            return response()->json(['code' => 0,'data' => '','msg'  =>'保存成功!']);
+        } catch (\Exception $e) {
+            return response()->json(['code' => $e->getCode(),'data' => '','msg'  =>$e->getMessage()]);
+        }
+    }
+    
+    public function destroy($id){
+        try {echo $id;
+            if(empty($id)){
+                throw new \Exception('信息错误!',1);
+            }
+            User::where('id',$id)->count();
+            
+        } catch (\Exception $e) {
+            return response()->json(['code' => $e->getCode(),'data' => '','msg'  =>$e->getMessage()]);
+        }
     }
     
     /**
@@ -101,4 +179,5 @@ class usersController extends Controller
         }
         return $option;
     }
+    
 }

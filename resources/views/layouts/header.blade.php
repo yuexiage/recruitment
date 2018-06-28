@@ -25,8 +25,8 @@
     <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js?v=') }}{{time()}}"></script>
     <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js?v=') }}{{time()}}"></script>
     <script src="{{ asset('js/plugins/layer/layer.min.js?v=') }}{{time()}}"></script>
-	<script src="{{ asset('js/hplus.min.js?v=4.1.0') }}{{time()}}"></script>
-	<script type="text/javascript" src="{{ asset('js/contabs.min.js?v=') }}{{time()}}"></script>
-	<script src="{{ asset('js/plugins/pace/pace.min.js?v=') }}{{time()}}"></script>
+    <script src="{{ asset('js/hplus.min.js?v=4.1.0') }}{{time()}}"></script>
+    <script type="text/javascript" src="{{ asset('js/contabs.min.js?v=') }}{{time()}}"></script>
+    <script src="{{ asset('js/plugins/pace/pace.min.js?v=') }}{{time()}}"></script>
 </head>
 <body class="fixed-sidebar full-height-layout gray-bg">
