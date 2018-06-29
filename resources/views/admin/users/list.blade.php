@@ -33,7 +33,7 @@
 				<form id='commentForm' role="form" method="post" class="form-inline pull-right">
 					<div class="content clearfix m-b">
 						<div class="form-group">
-							<label>管理员名称：</label> <input type="text" class="form-control"
+							<label>用户名称：</label> <input type="text" class="form-control"
 								id="name" name="name">
 						</div>
 						<div class="form-group">
@@ -49,16 +49,7 @@
 				<div class="example-wrap bootstrap-table ">
 					<div class="example fixed-table-container">
 						<table id="cusTable" class="table table-hover table-striped">
-							<thead>
-								<th data-field="id" width="50">用户ID</th>
-								<th data-field="name">用户名称</th>
-								<th data-field="email">用户邮箱</th>
-								<th data-field="backuser">后台用户</th>
-								<th data-field="isadmin">管理员</th>
-								<th data-field="checkout" width="50">迁出</th>
-								<th data-field="created_at">创建时间</th>
-								<th data-field="operate">操作</th>
-							</thead>
+							
 						</table>
 					</div>
 				</div>
@@ -105,6 +96,66 @@ function initTable() {
         paginationNextText: "下一页",
         paginationLastText: "尾页",
         queryParamsType : "undefined",
+        columns:[
+        	[
+                {
+                    field: 'id',
+                    title: '用户ID',
+                    align: 'center',
+                    colspan: 1
+                    ,width:50
+                },
+                {
+                    field: 'name',
+                    title: '用户名称',
+                    align: 'center',
+                    colspan: 1
+                    ,width:100
+                },
+                {
+                    field: 'email',
+                    title: '用户邮箱',
+                    align: 'center',
+                    colspan: 1
+                    ,width:200
+                },
+                {
+                    field: 'backuser',
+                    title: '后台用户',
+                    align: 'center',
+                    colspan: 1,
+                    width:30
+                },
+                {
+                    field: 'isadmin',
+                    title: '管理员',
+                    align: 'center',
+                    colspan: 1,
+                    width:30
+                },
+                {
+                    field: 'checkout',
+                    title: '迁出',
+                    align: 'center',
+                    colspan: 1,
+                    width:30
+                }
+                ,
+                {
+                    field: 'created_at',
+                    title: '创建时间',
+                    align: 'center',
+                    colspan: 1,
+                    width:200
+                },
+                {
+                    field: 'operate',
+                    title: '操作',
+                    align: 'center',
+                    colspan: 1
+                }
+            ]
+        ],
         queryParams: function queryParams(params) {   //设置查询参数
             var param = {
                 pageNumber: params.pageNumber,
