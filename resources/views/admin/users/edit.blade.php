@@ -65,6 +65,22 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-sm-3 control-label"><sub>*</sub>角色：</label>
+                            <div class="input-group col-sm-4">
+                                <select name='roles' required lay-verify="required" >
+                                	<option value=''>选择角色</option>
+                                	@foreach($roles as $val)
+                                	<option value='{{$val->id}}' 
+                                	@if(isset($user))
+                                	{{isset($val->id)&&$val->id==$user->hasRole($val->name)?'selected':''}}
+                                	@endif
+                                	>{{$val->name}}
+                                	</option>
+                                	@endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-6">
                             	<input type="hidden" class="form-control" name="user_id" required value="{{isset($user->id)?$user->id:'-1'}}">
                                 <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>

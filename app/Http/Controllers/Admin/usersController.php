@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Admin;
 use Validator;
 use App\User;
-use App\models\RoleModel;
-use App\models\usersModel;
 use Illuminate\Http\Request;
 use App\models\DepartmeModel;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
 class usersController extends Controller
@@ -37,13 +36,17 @@ class usersController extends Controller
             if (!empty($input['searchText'])) {
                 $where[]  = ['name','like', '%' . $input['searchText'] . '%'];
             }
-            $users  = usersModel::where($where)
-                    ->select(DB::raw('id,name,email,case when backuser =1 THEN "<span class=\"layui-badge layui-bg-green\">是</span>" WHEN backuser =0 THEN "<span class=\"layui-badge layui-bg-gray\">否</span>" END as backuser,case when isadmin =1 THEN "<span class=\"layui-badge layui-bg-green\">是</span>" WHEN isadmin =0 THEN "<span class=\"layui-badge layui-bg-gray\">否</span>" END as isadmin ,case when checkout =1 THEN "<span class=\"layui-badge layui-bg-badge\">是</span>" WHEN checkout =0 THEN "<span class=\"layui-badge layui-bg-gray\">否</span>" END as checkout ,created_at'))->offset($offset)->limit($limit)->get();
+            $users  = user::where($where)
+                    ->select(DB::raw('users.id,name,email,departme.departme_name,case when backuser =1 THEN "<span class=\"layui-badge layui-bg-green\">是</span>" WHEN backuser =0 THEN "<span class=\"layui-badge layui-bg-gray\">否</span>" END as backuser,case when isadmin =1 THEN "<span class=\"layui-badge layui-bg-green\">是</span>" WHEN isadmin =0 THEN "<span class=\"layui-badge layui-bg-gray\">否</span>" END as isadmin ,case when checkout =1 THEN "<span class=\"layui-badge layui-bg-badge\">是</span>" WHEN checkout =0 THEN "<span class=\"layui-badge layui-bg-gray\">否</span>" END as checkout ,created_at'))
+                    ->offset($offset)
+                    ->limit($limit)
+                    ->leftJoin('departme','users.departme_alias','=','departme.alias')
+                    ->get();
             foreach($users as $key=>$vo){
                 $users[$key]['operate'] = $this->showOperate($this->makeButton($vo['id']));
             }
             $return =[];
-            $return['total']    = usersModel::where($where)->count();  // 总数据
+            $return['total']    = user::where($where)->count();  // 总数据
             $return['rows']     = $users;
             return response()->json($return);
         }
@@ -57,13 +60,16 @@ class usersController extends Controller
      */
     public function edit($user_id,Request $request){
         if($user_id!=-1){
-            $user = usersModel::where('id',$user_id)->first();
+            $user = user::where('id',$user_id)->first();
             if(empty($user)){
                 abort('404');
             }
             $view_data['user']      = $user;
         }
         //获取所有角色
+        $role                       = Role::all();
+        $view_data['roles']         = $role;
+        //获取所有部门
         $departmes                  = DepartmeModel::all();
         $view_data['departmes']     = $departmes;
         return view('admin.users.edit',$view_data);
@@ -81,6 +87,7 @@ class usersController extends Controller
                 'name'      => 'required|alpha_num',
                 'email'     => 'required|email',
                 'departme'  => 'required',
+                'roles'     => 'required',
                 'user_id'   => 'required'
             ];
             if($request->password!=''){
@@ -92,6 +99,7 @@ class usersController extends Controller
                 'email.required'    => '邮箱不能为空!',
                 'email.email'       => '邮箱格式错误!',
                 'departme.required' => '请选择部门!',
+                'roles.required'    => '请选择角色!',
                 'user_id.required'  => '用户信息为空!',
             ];
             $validator = Validator::make($request->all(), $rules,$messages);
@@ -115,10 +123,16 @@ class usersController extends Controller
             }
             $data['backuser']       = 1;
             $data['departme_alias'] = $request['departme'];
+            $role                   = Role::find($request['roles']);
             if($request->user_id==-1){
-                User::create($data);
+                $user = User::create($data);
+                $user->guard_name = $role->guard_name;
+                $user->assignRole($role->name);
             }else{
                 User::where('id',$request['user_id'])->update($data);
+                $user               = User::find($request['user_id']);
+                $user->guard_name   = $role->guard_name;
+                $user ->syncRoles([ $role->name ]);
             }
             return response()->json(['code' => 0,'data' => '','msg'  =>'保存成功!']);
         } catch (\Exception $e) {
@@ -131,9 +145,14 @@ class usersController extends Controller
             if(empty($id)){
                 throw new \Exception('信息错误!',1);
             }
-            $count = User::where('id',$id)->count();
-            if(!$count){
+            $user = User::where('id',$id)->first();
+            if(empty($user)){
                 throw new \Exception('无效用户ID!',1);
+            }
+            $roles = $user->getRoleNames();
+            foreach($roles as $key => $val){
+                $user->guard_name = $key;
+                $user->removeRole($val);            #删除当前用户所有角色
             }
             User::where('id',$id)->delete();
             return response()->json(['code' => 0,'data' => '','msg'  =>'删除成功!']);
@@ -161,13 +180,7 @@ class usersController extends Controller
                 'href' => "javascript:roleDel(" .$id .")",
                 'btnStyle' => 'danger',
                 'icon' => 'fa fa-trash-o'
-            ],
-            '分配权限' => [
-                'auth' => 'role/giveaccess',
-                'href' => "javascript:giveQx(" .$id .")",
-                'btnStyle' => 'info',
-                'icon' => 'fa fa-institution'
-            ],
+            ]
         ];
     }
     

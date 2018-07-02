@@ -30,7 +30,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">角色名称：</label>
                             <div class="input-group col-sm-4">
-                                <input id="role_name" type="text" class="form-control" name="name" required aria-required="true" value="{{$role->name}}">
+                                <input id="role_name" type="text" class="form-control" name="name" required aria-required="true" value="{{isset($role->name)?$role->name:''}}">
                             </div>
                         </div>
                         <div class="form-group">
@@ -39,14 +39,14 @@
                             <select name='guard_name' required class="form-control">
                             	<option value=''>选择部门</option>
                             	@foreach($departme as $val)
-                            	<option value='{{$val->alias}}'>{{$val->departme_name}}</option>
+                            	<option value='{{$val->alias}}' @if(isset($role->guard_name)&&$val->alias == $role->guard_name) selected @endif>{{$val->departme_name}}</option>
                             	@endforeach
                             </select>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-6">
-                            	<input id="role_name" type="hidden" class="form-control" name="role_id" required value="{{$role->id}}">
+                            	<input id="role_name" type="hidden" class="form-control" name="role_id" required value="{{isset($role->id)?$role->id:'-1'}}">
                                 <button class="btn btn-primary" type="submit">提交</button>
                             </div>
                         </div>

@@ -8,13 +8,17 @@ use Illuminate\Http\Request;
 use App\models\DepartmeModel;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
-use Spatie\Permission\Models\Permission;
+use App\models\usersModel;
 
 class RoleController extends Controller
 {
     private $view_data = [];
     public function index() {
         #$role = Role::create(['name' => '技术员','guard_name'=>'web3']);
+        
+       $user =  new usersModel();
+       #$user->removeRole('经理'); 
+        
         return view('admin.role.index');
     }
     
@@ -130,7 +134,7 @@ class RoleController extends Controller
     
     public function destroy($id,Request $request){
         $input = $request->all();
-        
+        echo 2222;
     }
    
 }

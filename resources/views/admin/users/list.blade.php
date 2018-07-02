@@ -110,14 +110,14 @@ function initTable() {
                     title: '用户名称',
                     align: 'center',
                     colspan: 1
-                    ,width:100
+                    ,width:150
                 },
                 {
                     field: 'email',
                     title: '用户邮箱',
                     align: 'center',
                     colspan: 1
-                    ,width:200
+                    ,width:250
                 },
                 {
                     field: 'backuser',
@@ -139,6 +139,13 @@ function initTable() {
                     align: 'center',
                     colspan: 1,
                     width:30
+                },
+                {
+                    field: 'departme_name',
+                    title: '所属部门',
+                    align: 'center',
+                    colspan: 1,
+                    width:150
                 }
                 ,
                 {
@@ -184,7 +191,7 @@ function roleDel(id){
     layer.confirm('确认删除此角色?', {icon: 3, title:'提示'}, function(index){
         //do something
         $.getJSON("{{url('/admin/users/delete')}}"+'/'+id, {}, function(res){
-            if(1 == res.code){
+            if(0 == res.code){
                 layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function(){
                 	window.location.reload();
                 });

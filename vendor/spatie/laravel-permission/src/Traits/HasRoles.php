@@ -205,7 +205,7 @@ trait HasRoles
 
     public function getRoleNames(): Collection
     {
-        return $this->roles->pluck('name');
+        return $this->roles->pluck('name','guard_name');
     }
 
     protected function getStoredRole($role): Role
