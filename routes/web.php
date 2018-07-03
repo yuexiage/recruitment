@@ -40,6 +40,8 @@ Route::group(['namespace' => 'Admin', 'middleware' => 'admin'], function () {
     Route::get('/admin/departme/getdepartme', 'DepartmeController@getDepartme');
     Route::resource('/admin/departme', 'DepartmeController');
     
+    //职位管理
+    Route::resource('admin/position', 'PositionController');
     //配置
     Route::resource('/admin/config', 'ConfigController');
     

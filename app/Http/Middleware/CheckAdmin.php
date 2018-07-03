@@ -46,6 +46,7 @@ class CheckAdmin
                 $user   = Auth::user()->toArray();
                 session()->put('user',$user);
                 if($user['isadmin']){
+                    session()->put('user.permission ','all');
                     $request['login_success'] =  ['code'=>0,'data'=>'/admin', 'msg'=>'管理员登录成功!'];
                 }else{                                                                  #权限验证    
                        //权限判断
@@ -61,7 +62,8 @@ class CheckAdmin
             }else{
                 $user = Auth::user();
                 //权限判断
-                
+                $roles = $user->getRoleNames();
+                session()->put('user.role ',$roles->toArray());
             }
             
         }

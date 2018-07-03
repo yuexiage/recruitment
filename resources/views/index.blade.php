@@ -53,6 +53,19 @@
 						</li>
 					</ul>
 				</li>
+				<li class="menu">
+					<a href="###"> 
+						<i class=" fa fa-coffee"></i> 
+						<span class="nav-label">职位管理 </span> 
+						<span class="fa arrow">
+						</span>
+					</a>
+					<ul class="nav nav-second-level">
+						<li>
+							<a class="J_menuItem" href="{{url('admin/position')}}">职位管理</a>
+						</li>
+					</ul>
+				</li>
 				@if ($isadmin) 
 				<li class="menu">
 					<a href="###"> 

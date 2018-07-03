@@ -18,8 +18,7 @@ class RoleController extends Controller
         
        $user =  new usersModel();
        #$user->removeRole('经理'); 
-        
-        return view('admin.role.index');
+       return view('admin.role.index');
     }
     
     /**
